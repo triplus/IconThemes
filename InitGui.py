@@ -37,6 +37,16 @@ def iconThemes():
     appliedIcons = []
     defaultIcons = {}
 
+    noneSvg = """<svg
+        xmlns="http://www.w3.org/2000/svg" height="64" width="64">
+         <rect height="64" width="64" fill="none" />
+        </svg>"""
+
+    nonePix = QtGui.QPixmap()
+    nonePix.loadFromData(noneSvg)
+
+    noneIcon = QtGui.QIcon(nonePix)
+
     paramGet = App.ParamGet("User parameter:BaseApp/IconThemes")
 
     def actionList():
@@ -235,23 +245,70 @@ def iconThemes():
             resetIcons()
 
             applyIcons()
-            updateListIcons()
+            updateIconArea()
 
-        def updateListIcons():
+        def updateIconArea():
             """
             Update icons in the icon preview area.
             """
-            icons = themeIcons()
+            iconArea.blockSignals(True)
+            iconArea.clear()
 
-            iconList.blockSignals(True)
+            if paramGet.GetBool("DesignerMode"):
 
-            iconList.clear()
+                actions = actionList()
 
-            for i in icons:
-                item = QtGui.QListWidgetItem(iconList)
-                item.setIcon(QtGui.QIcon(i))
+                for i in actions:
+                    item = QtGui.QListWidgetItem()
+                    item.setToolTip(actions[i].toolTip())
+                    item.setData(33, actions[i].objectName())
+                    item.setText(actions[i].text().replace("&", ""))
 
-            iconList.blockSignals(False)
+                    if actions[i].icon():
+                        item.setIcon(actions[i].icon())
+                    else:
+                        item.setIcon(noneIcon)
+
+                    iconArea.addItem(item)
+
+            else:
+                icons = themeIcons()
+
+                for i in icons:
+                    item = QtGui.QListWidgetItem(iconArea)
+                    item.setIcon(QtGui.QIcon(i))
+
+            iconArea.sortItems(QtCore.Qt.AscendingOrder)
+
+            iconArea.blockSignals(False)
+
+        def onSelected():
+            """
+            Update icon file name on selection.
+            """
+            if paramGet.GetBool("DesignerMode"):
+                item = iconArea.currentItem()
+                if item:
+                    labelIconName.setText(item.data(33) + ".svg")
+                else:
+                    pass
+            else:
+                pass
+
+        def onDesignerMode():
+            """
+            Enable or disable the designer mode.
+            """
+            if paramGet.GetBool("DesignerMode"):
+                paramGet.SetBool("DesignerMode", 0)
+                labelIconName.setVisible(False)
+                buttonDesignerMode.setChecked(False)
+            else:
+                paramGet.SetBool("DesignerMode", 1)
+                labelIconName.setVisible(True)
+                buttonDesignerMode.setChecked(True)
+
+            updateIconArea()
 
         def onAccepted():
             """
@@ -269,8 +326,16 @@ def iconThemes():
             """
             Set preferences default values.
             """
+
+            if paramGet.GetBool("DesignerMode"):
+                labelIconName.setVisible(True)
+                buttonDesignerMode.setChecked(True)
+            else:
+                labelIconName.setVisible(False)
+                buttonDesignerMode.setChecked(False)
+
             updateComboBox()
-            updateListIcons()
+            updateIconArea()
 
         dialog = QtGui.QDialog(mw)
         dialog.resize(800, 450)
@@ -282,12 +347,21 @@ def iconThemes():
         comboBox = QtGui.QComboBox(dialog)
         comboBox.setMinimumWidth(220)
 
-        iconList = QtGui.QListWidget(dialog)
-        iconList.setParent(dialog)
-        iconList.setIconSize(QtCore.QSize(48, 48))
-        iconList.setGridSize(QtCore.QSize(108, 96))
-        iconList.setViewMode(QtGui.QListView.IconMode)
-        iconList.setResizeMode(QtGui.QListView.Adjust)
+        labelIconName = QtGui.QLabel(dialog)
+        labelIconName.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+
+        iconArea = QtGui.QListWidget(dialog)
+        iconArea.setParent(dialog)
+        iconArea.setIconSize(QtCore.QSize(48, 48))
+        iconArea.setGridSize(QtCore.QSize(108, 96))
+        iconArea.sortItems(QtCore.Qt.AscendingOrder)
+        iconArea.setViewMode(QtGui.QListView.IconMode)
+        iconArea.setResizeMode(QtGui.QListView.Adjust)
+
+        buttonDesignerMode = QtGui.QPushButton("D", dialog)
+        buttonDesignerMode.setToolTip("Designer mode")
+        buttonDesignerMode.setMaximumWidth(40)
+        buttonDesignerMode.setCheckable(True)
 
         buttonClose = QtGui.QPushButton("Close", dialog)
         buttonClose.setDefault(True)
@@ -295,13 +369,15 @@ def iconThemes():
         layoutTop = QtGui.QHBoxLayout()
         layoutTop.addWidget(comboBox)
         layoutTop.addStretch(1)
+        layoutTop.addWidget(labelIconName)
 
         layoutBottom = QtGui.QHBoxLayout()
+        layoutBottom.addWidget(buttonDesignerMode)
         layoutBottom.addStretch(1)
         layoutBottom.addWidget(buttonClose)
 
         layout.insertLayout(0, layoutTop)
-        layout.insertWidget(1, iconList)
+        layout.insertWidget(1, iconArea)
         layout.insertLayout(2, layoutBottom)
 
         prefDefaults()
@@ -309,6 +385,8 @@ def iconThemes():
         dialog.finished.connect(onFinished)
         buttonClose.clicked.connect(onAccepted)
         comboBox.currentIndexChanged.connect(onTheme)
+        iconArea.itemSelectionChanged.connect(onSelected)
+        buttonDesignerMode.clicked.connect(onDesignerMode)
 
         return dialog
 
