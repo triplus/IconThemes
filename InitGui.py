@@ -1,5 +1,5 @@
 # Icon themes for FreeCAD
-# Copyright (C) 2016  triplus @ FreeCAD
+# Copyright (C) 2016, 2017 triplus @ FreeCAD
 #
 #
 # This library is free software; you can redistribute it and/or
@@ -16,15 +16,15 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 
+"""Icon themes for FreeCAD."""
 
 from PySide import QtGui
 mw = FreeCADGui.getMainWindow()
 
 
 def iconThemes():
-    """
-    Icon themes for FreeCAD.
-    """
+    """Icon themes for FreeCAD."""
+
     import os
     import FreeCADGui as Gui
     import FreeCAD as App
@@ -32,7 +32,6 @@ def iconThemes():
     from PySide import QtCore
 
     mw = Gui.getMainWindow()
-    mb = mw.menuBar()
 
     appliedIcons = []
     defaultIcons = {}
@@ -174,17 +173,6 @@ def iconThemes():
                     appliedIcons.append(name)
                 else:
                     pass
-        else:
-            pass
-
-    def addMenu():
-        """
-        Add accessories menu to the menubar.
-        """
-        toolsMenu = mb.findChild(QtGui.QMenu, "&Tools")
-
-        if toolsMenu:
-            toolsMenu.addAction(actionAccessories)
         else:
             pass
 
@@ -390,23 +378,50 @@ def iconThemes():
 
         return dialog
 
-    actionAccessories = QtGui.QAction(mw)
-    actionAccessories.setIconText("Accessories")
+    def accessoriesMenu():
+        """Add icon themes preferences to accessories menu."""
 
-    actionPref = QtGui.QAction(mw)
-    actionPref.setText("IconThemes")
-    actionPref.setObjectName("Std_IconThemes")
+        mw = Gui.getMainWindow()
+        pref = QtGui.QAction(mw)
+        pref.setText("Icon themes")
+        pref.setObjectName("IconThemes")
+        pref.triggered.connect(onPreferences)
 
-    menu = QtGui.QMenu(mw)
-    actionAccessories.setMenu(menu)
-    menu.addAction(actionPref)
+        try:
+            import AccessoriesMenu
+            AccessoriesMenu.addItem("IconThemes")
+        except ImportError:
+            a = mw.findChild(QtGui.QAction, "AccessoriesMenu")
 
-    addMenu()
+            if a:
+                a.menu().addAction(pref)
+            else:
+                actionAccessories = QtGui.QAction(mw)
+                actionAccessories.setObjectName("AccessoriesMenu")
+                actionAccessories.setIconText("Accessories")
+                menu = QtGui.QMenu(mw)
+                actionAccessories.setMenu(menu)
+                menu.addAction(pref)
+
+                def addMenu():
+                    """Add accessories menu to the menubar."""
+
+                    mb = mw.menuBar()
+
+                    toolsMenu = mb.findChild(QtGui.QMenu, "&Tools")
+
+                    if toolsMenu:
+                        toolsMenu.addAction(actionAccessories)
+                    else:
+                        pass
+
+                addMenu()
+                mw.workbenchActivated.connect(addMenu)
+
+    accessoriesMenu()
     applyIcons()
 
-    mw.workbenchActivated.connect(addMenu)
     mw.workbenchActivated.connect(applyIcons)
-    actionPref.triggered.connect(onPreferences)
 
 
 # Single instance
