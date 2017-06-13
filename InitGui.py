@@ -18,9 +18,6 @@
 
 """Icon themes for FreeCAD."""
 
-from PySide import QtGui
-mw = FreeCADGui.getMainWindow()
-
 
 def iconThemes():
     """Icon themes for FreeCAD."""
@@ -30,8 +27,10 @@ def iconThemes():
     import FreeCAD as App
     from PySide import QtGui
     from PySide import QtCore
+    import IconThemesLocator
 
     mw = Gui.getMainWindow()
+    timer = IconThemesLocator.delayTimer()
 
     appliedIcons = []
     defaultIcons = {}
@@ -99,17 +98,19 @@ def iconThemes():
         Current icon theme folder.
         """
         themeFolder = paramGet.GetString("ThemeFolder")
-
         if themeFolder:
+            try:
+                folder = themeFolder.decode("UTF-8")
+            except AttributeError:
+                folder = themeFolder
 
             path = (App.getUserAppDataDir() +
                     "Gui" +
                     os.path.sep +
                     "Icons" +
                     os.path.sep +
-                    themeFolder.decode("UTF-8") +
+                    folder +
                     os.path.sep)
-
             if os.path.isdir(path):
                 return path
             else:
@@ -193,16 +194,22 @@ def iconThemes():
             """
             default = True
             folders = themeFolders()
-            current = paramGet.GetString("ThemeFolder").decode("UTF-8")
+            try:
+                current = paramGet.GetString("ThemeFolder").decode("UTF-8")
+            except AttributeError:
+                current = paramGet.GetString("ThemeFolder")
 
             comboBox.blockSignals(True)
 
             comboBox.clear()
 
             for i in folders:
-                comboBox.addItem(i.decode("UTF-8"))
+                try:
+                    comboBox.addItem(i.decode("UTF-8"))
+                except AttributeError:
+                    comboBox.addItem(i)
 
-            for count in xrange(comboBox.count()):
+            for count in range(comboBox.count()):
                 if comboBox.itemText(count) == current:
                     comboBox.setCurrentIndex(count)
                     default = False
@@ -225,7 +232,10 @@ def iconThemes():
             """
             if index != 0:
                 text = comboBox.currentText()
-                paramGet.SetString("ThemeFolder", text.encode("UTF-8"))
+                try:
+                    paramGet.SetString("ThemeFolder", text.encode("UTF-8"))
+                except TypeError:
+                    paramGet.SetString("ThemeFolder", text)
             else:
                 paramGet.RemString("ThemeFolder")
 
@@ -381,7 +391,6 @@ def iconThemes():
     def accessoriesMenu():
         """Add icon themes preferences to accessories menu."""
 
-        mw = Gui.getMainWindow()
         pref = QtGui.QAction(mw)
         pref.setText("Icon themes")
         pref.setObjectName("IconThemes")
@@ -418,14 +427,25 @@ def iconThemes():
                 addMenu()
                 mw.workbenchActivated.connect(addMenu)
 
-    accessoriesMenu()
-    applyIcons()
+    def onStart():
+        """Start icon themes."""
 
-    mw.workbenchActivated.connect(applyIcons)
+        start = False
+        try:
+            mw.workbenchActivated
+            start = True
+        except AttributeError:
+            pass
+
+        if start:
+            timer.stop()
+            timer.deleteLater()
+            accessoriesMenu()
+            applyIcons()
+            mw.workbenchActivated.connect(applyIcons)
+
+    timer.timeout.connect(onStart)
+    timer.start(500)
 
 
-# Single instance
-if mw.findChild(QtGui.QAction, "Std_IconThemes"):
-    pass
-else:
-    iconThemes()
+iconThemes()
