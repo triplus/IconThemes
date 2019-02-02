@@ -421,6 +421,7 @@ def iconThemes():
 
                     if toolsMenu:
                         toolsMenu.addAction(actionAccessories)
+                        actionAccessories.setVisible(True)
                     else:
                         pass
 
