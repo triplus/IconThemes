@@ -35,15 +35,7 @@ def iconThemes():
     appliedIcons = []
     defaultIcons = {}
 
-    noneSvg = """<svg
-        xmlns="http://www.w3.org/2000/svg" height="64" width="64">
-         <rect height="64" width="64" fill="none" />
-        </svg>"""
-
-    nonePix = QtGui.QPixmap()
-    nonePix.loadFromData(noneSvg)
-
-    noneIcon = QtGui.QIcon(nonePix)
+    noneIcon = QtGui.QIcon(":/icons/freecad")
 
     paramGet = App.ParamGet("User parameter:BaseApp/IconThemes")
 
