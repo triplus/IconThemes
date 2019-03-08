@@ -420,6 +420,15 @@ def iconThemes():
                 addMenu()
                 mw.workbenchActivated.connect(addMenu)
 
+    def demoTheme():
+        """
+        Set the demo.rcc theme.
+        """
+        path = App.getUserAppDataDir() + "Gui" + os.path.sep + "Icons"
+        if os.path.isfile(os.path.join(path, "demo.rcc")):
+            QtCore.QResource.registerResource(os.path.join(path, "demo.rcc"))
+            QtGui.QIcon.setThemeName("Demo")
+
     def onStart():
         """Start icon themes."""
 
@@ -445,6 +454,7 @@ def iconThemes():
             if mw.property("eventLoop"):
                 onStart()
 
+    demoTheme()
     timer.timeout.connect(onPreStart)
     timer.start(500)
 
