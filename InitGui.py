@@ -23,4 +23,5 @@ p = FreeCAD.ParamGet("User parameter:BaseApp/IconThemes")
 
 
 if p.GetBool("Enabled", 1):
+    import IconThemesGui
     import IconThemesLegacy
