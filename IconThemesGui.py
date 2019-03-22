@@ -44,9 +44,10 @@ def iconThemesFiles():
     files = []
     path = iconThemesPath()
 
-    for f in os.listdir(path):
-        if f.endswith(".rcc"):
-            files.append(f)
+    if os.path.isdir(path):
+        for f in os.listdir(path):
+            if f.endswith(".rcc"):
+                files.append(f)
     return files
 
 
