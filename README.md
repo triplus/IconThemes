@@ -4,7 +4,6 @@ Icon themes for FreeCAD
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [About](#about)
 - [Installation](#installation)
   - [Via Addon Manager (recommended)](#via-addon-manager-recommended)
@@ -18,6 +17,7 @@ Icon themes for FreeCAD
 - [Feedback](#feedback)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## About
 This module adds support for icon themes to FreeCAD.
 
@@ -47,6 +47,8 @@ Move the demo.rcc to the appropriate location:
 **Note: The folder might not exist, but you can create them manually**
 
 You can then open the icon themes preferences in FreeCAD (Accessories > IconThemes) and choose the icon theme.
+
+![screenshot-of-FC-Accessories-dropdown](https://user-images.githubusercontent.com/4140247/64272349-2b549a00-cf0d-11e9-90c9-84e3f8191b2d.png)
 
 ## Usage (legacy)
 For the demonstration purposes DemoTheme.zip icon theme was provided. 
@@ -118,3 +120,5 @@ QT's resource compiler tool (rcc) is used to compile the contents you specified 
 ## Feedback
 Feedback can be posted to this [FreeCAD forum thread](https://forum.freecadweb.org/viewtopic.php?f=22&t=17901)
 
+### License
+LGPLv2.1
