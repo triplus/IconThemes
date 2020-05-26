@@ -1,58 +1,120 @@
 # IconThemes
 Icon themes for FreeCAD
 
-### Installation:
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-IconThemes module can be installed via the FreeCAD [Addon Manager](https://github.com/FreeCAD/FreeCAD-addons#1-builtin-addon-manager). 
 
-#### Manual installation:
+- [About](#about)
+- [Installation](#installation)
+  - [Via Addon Manager (recommended)](#via-addon-manager-recommended)
+  - [Manual installation](#manual-installation)
+- [Usage](#usage)
+- [Usage (legacy)](#usage-legacy)
+- [Creating themes](#creating-themes)
+  - [Prerequisites](#prerequisites)
+  - [Preparing the theme](#preparing-the-theme)
+  - [Compiling the theme](#compiling-the-theme)
+- [Feedback](#feedback)
 
-Install path for FreeCAD modules depends on the operating system used.
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+## About
+This module adds support for icon themes to FreeCAD.
 
-##### Examples:
+It uses the resource files (.rcc) of QT (FreeCAD's interface framework). rcc-files bundle multiple resources into a single which is perfect for theming.
 
-Linux:
+## Installation
+### Via addon manager (recommended)
+This module can be installed via the FreeCAD [Addon Manager](https://github.com/FreeCAD/FreeCAD-addons#1-builtin-addon-manager). In FreeCAD, Open Tools > Addon Manager and search for "IconThemes" in the list.
 
-`/home/user_name/.FreeCAD/Mod/IconThemes/InitGui.py`
+### Via manual installation
 
-macOS:
+Install path for FreeCAD modules depends on the operating system used:
 
-`/Users/user_name/Library/Preferences/FreeCAD/Mod/IconThemes/InitGui.py`
+- Linux: `/home/user_name/.FreeCAD/Mod/IconThemes/InitGui.py`
+- MacOS: `/Users/user_name/Library/Preferences/FreeCAD/Mod/IconThemes/InitGui.py`
+- Windows: `C:\Users\user_name\AppData\Roaming\FreeCAD\Mod\IconThemes\InitGui.py`
 
-Windows:
+## Usage
+For the demonstration purposes demo.rcc icon theme was provided. 
 
-`C:\Users\user_name\AppData\Roaming\FreeCAD\Mod\IconThemes\InitGui.py`
+Move the demo.rcc to the appropriate location:
 
-#### Usage:
+- On Linux: `/home/user_name/.FreeCAD/Gui/Icons/demo.rcc`
+- On MacOS: `/Users/user_name/Library/Preferences/FreeCAD/Gui/Icons/demo.rcc`
+- On Windows: `C:\Users\user_name\AppData\Roaming\FreeCAD\Gui\Icons\demo.rcc`
 
-For the demonstration purposes demo.rcc (for legacy support DemoTheme.zip) icon theme was provided. Move the demo.rcc (for legacy support extract the DemoTheme.zip archive) to an appropriate location.
+**Note: The folder might not exist, but you can create them manually**
 
-Linux:
+You can then open the icon themes preferences in FreeCAD (Accessories > IconThemes) and choose the icon theme.
 
-`/home/user_name/.FreeCAD/Gui/Icons/demo.rcc`
+## Usage (legacy)
+For the demonstration purposes DemoTheme.zip icon theme was provided. 
 
-Linux (legacy):
+Extract the DemoTheme.zip archive to the appropriate location:
 
-`/home/user_name/.FreeCAD/Gui/Icons/DemoTheme`
+- On Linux: `/home/user_name/.FreeCAD/Gui/Icons/DemoTheme`
+- On MacOS: `/Users/user_name/Library/Preferences/FreeCAD/Gui/Icons/DemoTheme`
+- On Windows: `C:\Users\user_name\AppData\Roaming\FreeCAD\Gui\Icons\DemoTheme`
 
-macOS:
+## Creating themes
+### Prerequisites
+You need [QT](https://www.qt.io/)'s [resource compiler (rcc)](https://doc.qt.io/qt-5/rcc.html). You can get it [by installing the QT developer tools](https://www.qt.io/product/development-tools).
 
-`/Users/user_name/Library/Preferences/FreeCAD/Gui/Icons/demo.rcc`
+### Preparing the theme
+Ingredients of a typical FreeCAD icon pack (all files located in a single folder):
 
-macOS (legacy):
+- Icons preferably in the SVG format (e.g. view-top.svg)
+- index.theme file
+- .qrc file
 
-`/Users/user_name/Library/Preferences/FreeCAD/Gui/Icons/DemoTheme`
+You can find such a structure in `demo-rcc-assets`.
 
-Windows:
+The contents of an index.theme file:
 
-`C:\Users\user_name\AppData\Roaming\FreeCAD\Gui\Icons\demo.rcc`
+```
+[Icon Theme]
+Name=Demo
+Comment=Demo icon theme pack
+Inherits=FreeCAD-default
+Directories=scalable
 
-Windows (legacy):
+[scalable]
+Size=64
+Type=Scalable
+MinSize=1
+MaxSize=256
+```
 
-`C:\Users\user_name\AppData\Roaming\FreeCAD\Gui\Icons\DemoTheme`
+The contents of a .qrc file:
 
-Open the icon themes preferences (Accessories -> IconThemes) and set the icon theme.
+```
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/icons/Demo">
+        <file>index.theme</file>
+    </qresource>
+    <qresource prefix="/icons/Demo/scalable">
+        <file>view-top.svg</file>
+    </qresource>
+</RCC>
+```
 
-##### Feedback
+**Note:** There is still work being done, but for now use the same icon file names that can be found in the [FreeCAD source code](https://github.com/FreeCAD/FreeCAD).
+
+### Compiling the theme
+QT's resource compiler tool (rcc) is used to compile the contents you specified in the .qrc-file into a single .rcc-file.
+
+```
+/usr/bin/rcc --binary demo.qrc -o demo.rcc --format-version 1
+```
+
+**Note 1:** If current version of rcc tool is used and to preserve support for Qt4 and older Qt5 versions (likely versions below Qt 5.9). Use the --format-version, otherwise you don't need to use it.
+
+**Note 2:** The path of rcc tool depends on your OS:
+
+- Linux: `/usr/bin/rcc`
+- MacOS: `/usr/local/Cellar/qt/{your QT version}/bin/rcc`
+
+## Feedback
 Feedback can be posted to this [FreeCAD forum thread](https://forum.freecadweb.org/viewtopic.php?f=22&t=17901)
 
