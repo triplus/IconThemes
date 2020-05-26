@@ -1,0 +1,11 @@
+[Icon Theme]
+Name=Demo
+Comment=Demo icon theme pack
+Inherits=FreeCAD-default
+Directories=scalable
+
+[scalable]
+Size=64
+Type=Scalable
+MinSize=1
+MaxSize=256

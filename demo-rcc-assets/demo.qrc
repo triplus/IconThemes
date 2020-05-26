@@ -1,0 +1,13 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/icons/Demo">
+        <file>index.theme</file>
+    </qresource>
+    <qresource prefix="/icons/Demo/scalable">
+        <file>view-bottom.svg</file>
+        <file>view-front.svg</file>
+        <file>view-left.svg</file>
+        <file>view-rear.svg</file>
+        <file>view-right.svg</file>
+        <file>view-top.svg</file>
+    </qresource>
+</RCC>
