@@ -32,7 +32,7 @@ This module can be installed via the FreeCAD [Addon Manager](https://github.com/
 Install path for FreeCAD modules depends on the operating system used:
 
 - Linux: `/home/user_name/.FreeCAD/Mod/IconThemes/InitGui.py`
-- MacOS: `/Users/user_name/Library/Preferences/FreeCAD/Mod/IconThemes/InitGui.py`
+- MacOS: `/Users/user_name/Library/Application\ Support/FreeCAD/Mod/IconThemes/InitGui.py`
 - Windows: `C:\Users\user_name\AppData\Roaming\FreeCAD\Mod\IconThemes\InitGui.py`
 
 ## Usage
@@ -41,7 +41,7 @@ For the demonstration purposes demo.rcc icon theme was provided.
 Move the demo.rcc to the appropriate location:
 
 - On Linux: `/home/user_name/.FreeCAD/Gui/Icons/demo.rcc`
-- On MacOS: `/Users/user_name/Library/Preferences/FreeCAD/Gui/Icons/demo.rcc`
+- On MacOS: `/Users/user_name/Library/Application\ Support/FreeCAD/Gui/Icons/demo.rcc`
 - On Windows: `C:\Users\user_name\AppData\Roaming\FreeCAD\Gui\Icons\demo.rcc`
 
 **Note: The folder might not exist, but you can create them manually**
@@ -56,7 +56,7 @@ For the demonstration purposes DemoTheme.zip icon theme was provided.
 Extract the DemoTheme.zip archive to the appropriate location:
 
 - On Linux: `/home/user_name/.FreeCAD/Gui/Icons/DemoTheme`
-- On MacOS: `/Users/user_name/Library/Preferences/FreeCAD/Gui/Icons/DemoTheme`
+- On MacOS: `/Users/user_name/Library/Application\ Support/FreeCAD/Gui/Icons/DemoTheme`
 - On Windows: `C:\Users\user_name\AppData\Roaming\FreeCAD\Gui\Icons\DemoTheme`
 
 ## Creating themes
